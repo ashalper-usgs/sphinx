@@ -16,7 +16,7 @@ from sphinx.project import Project
 
 
 def test_project_discover(rootdir):
-    project = Project(rootdir / 'test-root', {})
+    project = Project(rootdir / 'test-root', {}, {})
 
     docnames = {'autodoc', 'bom', 'extapi', 'extensions', 'footnote', 'images',
                 'includes', 'index', 'lists', 'markup', 'math', 'objects',
@@ -52,7 +52,7 @@ def test_project_discover(rootdir):
 
 @pytest.mark.sphinx(testroot='basic')
 def test_project_path2doc(app):
-    project = Project(app.srcdir, app.config.source_suffix)
+    project = Project(app.srcdir, app.config.source_suffix, app.config.source_other)
     assert project.path2doc('index.rst') == 'index'
     assert project.path2doc('index.foo') is None  # unknown extension
     assert project.path2doc('index.foo.rst') == 'index.foo'
@@ -65,8 +65,9 @@ def test_project_path2doc(app):
 def test_project_doc2path(app):
     source_suffix = OrderedDict([('.rst', 'restructuredtext'),
                                  ('.txt', 'restructuredtext')])
+    source_other = []
 
-    project = Project(app.srcdir, source_suffix)
+    project = Project(app.srcdir, source_suffix, source_other)
     assert project.doc2path('index') == (app.srcdir / 'index.rst')
 
     # first source_suffix is used for missing file
