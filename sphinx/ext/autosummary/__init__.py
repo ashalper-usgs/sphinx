@@ -184,7 +184,7 @@ class FakeApplication:
         self.extensions = {}
         self.srcdir = None
         self.config = Config()
-        self.project = Project(None, None)
+        self.project = Project(None, None, None)
         self.registry = SphinxComponentRegistry()
 
 
