@@ -254,7 +254,7 @@ class Sphinx:
         self.events.emit('config-inited', self.config)
 
         # create the project
-        self.project = Project(self.srcdir, self.config.source_suffix)
+        self.project = Project(self.srcdir, self.config.source_suffix, self.config.source_other)
         # create the builder
         self.builder = self.create_builder(buildername)
         # set up the build environment
