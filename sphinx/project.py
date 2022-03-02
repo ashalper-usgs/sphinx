@@ -24,13 +24,16 @@ EXCLUDE_PATHS = ['**/_sources', '.#*', '**/.#*', '*.lproj/**']
 class Project:
     """A project is the source code set of the Sphinx document(s)."""
 
-    def __init__(self, srcdir: str, source_suffix: Dict[str, str]) -> None:
+    def __init__(self, srcdir: str, source_suffix: Dict[str, str], source_other: Dict[str, str]) -> None:
         #: Source directory.
         self.srcdir = srcdir
 
         #: source_suffix. Same as :confval:`source_suffix`.
         self.source_suffix = source_suffix
 
+        #: other, suffix-less source files to consider (e.g. "Makefile", "Dockerfile")
+        self.source_other = source_other
+        
         #: The name of documents belongs to this project.
         self.docnames: Set[str] = set()
 
@@ -67,6 +70,8 @@ class Project:
         """
         if filename.startswith(self.srcdir):
             filename = relpath(filename, self.srcdir)
+        if os.path.basename(filename) in self.source_other:
+            return path_stabilize(filename)
         for suffix in self.source_suffix:
             if filename.endswith(suffix):
                 filename = path_stabilize(filename)
@@ -91,6 +96,12 @@ class Project:
             suffix = list(self.source_suffix)[0]
 
         if basedir:
-            return basename + suffix
+            path = basename
         else:
-            return docname + suffix
+            path = docname
+
+        # if basename of path is in list of suffix-less files ...
+        if os.path.basename(path) in self.source_other:
+            return path
+        else:
+            return path + suffix

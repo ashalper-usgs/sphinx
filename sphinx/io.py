@@ -169,7 +169,7 @@ def read_doc(app: "Sphinx", env: BuildEnvironment, filename: str) -> nodes.docum
 
     reader = SphinxStandaloneReader()
     reader.setup(app)
-    filetype = get_filetype(app.config.source_suffix, filename)
+    filetype = get_filetype(app.config.source_suffix, app.config.source_other, filename)
     parser = app.registry.create_source_parser(app, filetype)
     if parser.__class__.__name__ == 'CommonMarkParser' and parser.settings_spec == ():
         # a workaround for recommonmark

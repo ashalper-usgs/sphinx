@@ -92,13 +92,19 @@ def get_matching_files(dirname: str,
             yield filename
 
 
-def get_filetype(source_suffix: Dict[str, str], filename: str) -> str:
+def get_filetype(source_suffix: Dict[str, str], source_other: Dict[str, str], filename: str) -> str:
+    # files with suffixes
     for suffix, filetype in source_suffix.items():
         if filename.endswith(suffix):
             # If default filetype (None), considered as restructuredtext.
             return filetype or 'restructuredtext'
-    else:
-        raise FiletypeNotFoundError
+
+    # suffix-less files
+    for basename, filetype in source_other.items():
+        if os.path.basename(filename) == basename:
+            return filetype or 'restructuredtext'
+
+    raise FiletypeNotFoundError
 
 
 class FilenameUniqDict(dict):
